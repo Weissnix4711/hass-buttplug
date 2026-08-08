@@ -12,7 +12,7 @@ from homeassistant.loader import async_get_loaded_integration
 from .const import DEFAULT_URI, DOMAIN, LOGGER
 
 
-class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+class ButtplugioFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Buttplug.io Config flow."""
 
     VERSION = 1

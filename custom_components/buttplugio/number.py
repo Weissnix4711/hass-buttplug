@@ -98,7 +98,9 @@ class ButtplugioVibrateNumber(ButtplugioDeviceEntity, NumberEntity):
         """Initialise vibration number class."""
         super().__init__(client, entry, device)
         self._feature = feature
-        self._attr_unique_id = f"{entry.entry_id}_device_{device.index}_vibrate"
+        self._attr_unique_id = (
+            f"{entry.entry_id}_device_{device.index}_{feature.index}_vibrate"
+        )
 
         feature_name = feature.description or f"Feature {feature.index}"
         self._attr_translation_placeholders = {"feature_name": feature_name}
@@ -110,11 +112,11 @@ class ButtplugioVibrateNumber(ButtplugioDeviceEntity, NumberEntity):
 
         try:
             if unit_value > 0:
-                await self._device.run_output(
+                await self._feature.run_output(
                     DeviceOutputCommand(OutputType.VIBRATE, float(unit_value))
                 )
             else:
-                await self._device.stop()
+                await self._feature.stop()
             self.async_set_available()
             self.async_write_ha_state()
         except ButtplugConnectorError as err:

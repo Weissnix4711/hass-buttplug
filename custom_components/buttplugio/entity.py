@@ -66,7 +66,8 @@ class ButtplugioDeviceEntity(Entity):
         """Update entity availability state."""
         if self._attr_available != available:
             self._attr_available = available
-            self.async_write_ha_state()
+            if self.hass is not None:
+                self.async_write_ha_state()
 
     @callback
     def async_set_unavailable(self) -> None:
