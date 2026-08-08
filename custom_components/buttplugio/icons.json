@@ -1,6 +1,9 @@
 {
     "entity": {
         "number": {
+            "rotate": {
+                "default": "mdi:rotate-right"
+            },
             "vibrate": {
                 "default": "mdi:vibrate",
                 "range": {

@@ -123,3 +123,48 @@ class ButtplugioVibrateNumber(ButtplugioDeviceEntity, NumberEntity):
             raise HomeAssistantError(
                 translation_domain=DOMAIN, translation_key="not_connected"
             ) from err
+
+
+class ButtplugioRotateNumber(ButtplugioDeviceEntity, NumberEntity):
+    """Buttplug.io Rotation Number class."""
+
+    _attr_native_max_value = 100.0
+    _attr_native_min_value = 0.0
+    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_translation_key = "rotate"
+
+    def __init__(
+        self,
+        client: ButtplugClient,
+        entry: ButtplugioConfigEntry,
+        device: ButtplugDevice,
+        feature: DeviceFeature,
+    ) -> None:
+        """Initialise rotation number class."""
+        super().__init__(client, entry, device)
+        self._feature = feature
+        self._attr_unique_id = (
+            f"{entry.entry_id}_device_{device.index}_{feature.index}_rotate"
+        )
+
+        feature_name = feature.description or f"Feature {feature.index}"
+        self._attr_translation_placeholders = {"feature_name": feature_name}
+
+    @override
+    async def async_set_native_value(self, value: float) -> None:
+        self._attr_native_value = value
+        unit_value = value / 100.0
+
+        try:
+            if unit_value > 0:
+                await self._feature.run_output(
+                    DeviceOutputCommand(OutputType.ROTATE, float(unit_value))
+                )
+            else:
+                await self._feature.stop()
+            self.async_set_available()
+            self.async_write_ha_state()
+        except ButtplugConnectorError as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="not_connected"
+            ) from err

@@ -19,6 +19,9 @@
     },
     "entity": {
         "number": {
+            "rotate": {
+                "name": "{feature_name} Rotation"
+            },
             "vibrate": {
                 "name": "{feature_name} Vibration Intensity"
             }
