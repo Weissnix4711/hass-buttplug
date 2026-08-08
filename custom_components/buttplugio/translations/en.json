@@ -1,0 +1,43 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Connect to Buttplug Server",
+                "description": "Enter the Server URL for your Intiface or Buttplug server. If you need help with the configuration have a look here: {documentation_url}",
+                "data": {
+                    "url": "Websocket URL"
+                }
+            }
+        },
+        "error": {
+            "connection": "Unable to connect to the server. Check the URL and ensure the server is running.",
+            "unknown": "Unknown error occurred while connecting to the server."
+        },
+        "abort": {
+            "already_configured": "This server is already configured."
+        }
+    },
+    "entity": {
+        "number": {
+            "vibrate": {
+                "name": "{feature_name} Vibration Intensity"
+            }
+        },
+        "sensor": {
+            "battery": {
+                "name": "Battery Level"
+            },
+            "rssi": {
+                "name": "Signal Strength"
+            }
+        },
+        "switch": {
+            "scan_devices": {
+                "name": "Scan for Devices"
+            }
+        }
+    },
+    "exceptions": {
+        "not_connected": { "message": "Not connected to Buttplug server." }
+    }
+}

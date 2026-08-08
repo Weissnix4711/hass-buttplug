@@ -1,0 +1,22 @@
+{
+    "entity": {
+        "number": {
+            "vibrate": {
+                "default": "mdi:vibrate",
+                "range": {
+                    "0": "mdi:vibrate-off",
+                    "1": "mdi:vibrate"
+                }
+            }
+        },
+        "switch": {
+            "scan_devices": {
+                "default": "mdi:bluetooth",
+                "state": {
+                    "on": "mdi:bluetooth-connect",
+                    "off": "mdi:bluetooth-off"
+                }
+            }
+        }
+    }
+}
