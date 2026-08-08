@@ -24,7 +24,12 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.loader import async_get_loaded_integration
 
-from .const import SIGNAL_DEVICE_ADDED, SIGNAL_DEVICE_REMOVED
+from .const import (
+    LOGGER,
+    SIGNAL_DEVICE_ADDED,
+    SIGNAL_DEVICE_REMOVED,
+    SIGNAL_SERVER_DISCONNECT,
+)
 from .data import ButtplugioData
 
 if TYPE_CHECKING:
@@ -55,15 +60,25 @@ async def async_setup_entry(
     )
 
     async def on_device_added(device: ButtplugDevice) -> None:
+        LOGGER.debug("Device added: %s", device)
         signal = SIGNAL_DEVICE_ADDED.format(entry.entry_id)
         async_dispatcher_send(hass, signal, device)
 
     async def on_device_removed(device: ButtplugDevice) -> None:
+        LOGGER.debug("Device removed: %s", device)
         signal = SIGNAL_DEVICE_REMOVED.format(entry.entry_id)
         async_dispatcher_send(hass, signal, device)
 
+    async def on_server_disconnect() -> None:
+        LOGGER.error("Buttplug server disconnected. Reloading.")
+        signal = SIGNAL_SERVER_DISCONNECT.format(entry.entry_id)
+        async_dispatcher_send(hass, signal)
+
+        hass.async_create_task(hass.config_entries.async_reload(entry.entry_id))
+
     client.on_device_added = on_device_added
     client.on_device_removed = on_device_removed
+    client.on_server_disconnect = on_server_disconnect
 
     try:
         await client.connect(url=entry.data[CONF_URL])
