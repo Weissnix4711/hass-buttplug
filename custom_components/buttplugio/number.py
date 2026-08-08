@@ -4,13 +4,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, override
 
-from buttplug import ButtplugDevice, DeviceFeature, DeviceOutputCommand, OutputType
+from buttplug import (
+    ButtplugConnectorError,
+    ButtplugDevice,
+    DeviceFeature,
+    DeviceOutputCommand,
+    OutputType,
+)
 from homeassistant.components.number import NumberEntity
 from homeassistant.const import PERCENTAGE
 from homeassistant.core import callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
-from .const import LOGGER, SIGNAL_DEVICE_ADDED, SIGNAL_DEVICE_REMOVED
+from .const import DOMAIN, SIGNAL_DEVICE_ADDED, SIGNAL_DEVICE_REMOVED
 from .entity import ButtplugioDeviceEntity
 
 if TYPE_CHECKING:
@@ -110,6 +117,7 @@ class ButtplugioVibrateNumber(ButtplugioDeviceEntity, NumberEntity):
                 await self._device.stop()
             self.async_set_available()
             self.async_write_ha_state()
-        except Exception as err:
-            LOGGER.error("Cannot send command: %s", err)
-            self.async_set_unavailable()
+        except ButtplugConnectorError as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="not_connected"
+            ) from err

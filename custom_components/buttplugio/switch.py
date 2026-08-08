@@ -13,9 +13,8 @@ from homeassistant.const import (
     EntityCategory,
 )
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.config_validation import domain_key
 
-from .const import DOMAIN, LOGGER
+from .const import DOMAIN
 from .entity import ButtplugioHubEntity
 
 if TYPE_CHECKING:
